@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+        <title>Todo list</title>
+        <style>
+            .strike {
+                text-decoration: line-through;
+            }
+
+            progress[value] {
+                -webkit-appearance: none;
+                appearance: none;
+
+                width: 100%;
+                height: 20px;
+            }
+
+            .progress-bar-container,
+            .progress-bar {
+                border-radius: 5px;
+                height: 30px;
+            }
+
+            .progress-bar-container {
+                width: 100%;
+                height: 30px;
+                background: grey;
+            }
+        </style>
+    </head>
+    <body ng-app="app" ng-controller="todo">
+        <header class="text-center">
+            <h1>Todo list</h1>
+            <p>We have {{ list.length }} things to do</p>
+        </header>
+        <main class="container">
+            <section>
+                <div class="row mb-3 mt-3">
+                    <div class="col-lg-10 col-md-8">
+                        <input type="text" class="form-control" ng-model="item">
+                    </div>
+                    <div class="col-lg-2 col-md-4">
+                        <button type="button" class="btn btn-primary" ng-click="add(item)">Ajouter</button>
+                    </div>
+                </div>
+                <ul class="list-group">
+                    <li ng-repeat="(key, task) in list" class="list-group-item" ng-class="{ strike: task.done }">
+                        <div class="row">
+                            <div class="col-lg-10 col-md-8">
+                                <div class="form-check" ng-class="{ 'd-none': task.editable, 'd-block': !task.editable }">
+                                    <input id="task-{{ key }}" type="checkbox" class="form-check-input" ng-model="notChecked" ng-click="done(key, notChecked)">
+                                    <label for="task-{{ key }}" class="form-check-label">{{ task.text }}</label>
+                                </div>
+                                <div ng-class="{ 'd-none': !task.editable, 'd-block': task.editable }">
+                                    <input type="text" class="form-control" ng-model="task.text">
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-4 text-right">
+                                <button type="button" class="btn btn-danger" ng-click="edit(key, true)">Edit</button>
+                                <button type="button" class="btn btn-danger" ng-click="delete(key)">Supprimer</button>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" ng-class="'bg-'+getColorProgress()" style="width: {{ getPercentageProgress() }}%;">
+                        {{ getTotalDoneTasks() }} of {{ list.length }} tasks done
+                    </div>
+                </div>
+                <!--<progress max="100" value="{{ getPercentageProgress() }}" ng-class="{ 'bg-'+getColorProgress() }">{{ getTotalDoneTasks() }} of {{ list.length }} tasks done</progress>-->
+            </section>
+        </main>
+        <script src="node_modules/angular/angular.min.js"></script>
+        <script src="js/todo-list.js"></script>
+    </body>
+</html>
